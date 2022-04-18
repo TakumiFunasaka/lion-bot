@@ -11,8 +11,8 @@ module.exports = {
   rules: {
     quotes: ["error", "double"],
   },
-  "parserOptions": {
-    "sourceType": "module",
-    "ecmaVersion": 2017
+  parserOptions: {
+    sourceType: "module",
+    ecmaVersion: 2017
   }
 };
