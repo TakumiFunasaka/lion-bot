@@ -42,7 +42,7 @@ jobs:
           # args: deploy --only functions
         run: | 
           cd functions
-          npm run deploy
+          firebase deploy --only functions
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_ID: ${{env.PROJECT_ID}}
