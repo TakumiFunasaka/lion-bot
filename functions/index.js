@@ -12,6 +12,7 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 
 const {verifyRequestSignature} = require("@slack/events-api");
 const verifyWebhook = (req) => {
+  console.log(req);
   const signature = {
     signingSecret: process.env.SLACK_SECRET,
     requestSignature: req.headers["x-slack-signature"],
