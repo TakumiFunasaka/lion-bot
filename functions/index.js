@@ -32,6 +32,7 @@ exports.slackConnector = functions.https.onRequest((req, res) => {
     console.log("SLACK_BOT_TOKEN: ", process.env.SLACK_BOT_TOKEN);
     console.log("VERIFICATION_TOKEN: ", process.env.VERIFICATION_TOKEN);
     console.log("KIBELA_TOKEN: ", process.env.KIBELA_TOKEN);
+    console.log("KIBELA_TOKEN: ", process.env.TEAM_NAME);
     // Slackからの認証かどうか
     verifyWebhook(req);
     // 初期認証対応

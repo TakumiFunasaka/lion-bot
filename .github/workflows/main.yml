@@ -34,6 +34,7 @@ jobs:
           echo "VERIFICATION_TOKEN=${{ secrets.VERIFICATION_TOKEN }}" >> .env
           echo "KIBELA_TOKEN=${{ secrets.KIBELA_TOKEN }}" >> .env
           echo "TEAM_NAME=${{ secrets.TEAM_NAME }}" >> .env
+          less .env
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
