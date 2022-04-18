@@ -26,6 +26,14 @@ jobs:
       - name: Set Project id
         run: |
           echo PROJECT_ID=${{ secrets.PROJECT_ID }} >> $GITHUB_ENV
+      - name: Environment Variables
+        run: | 
+          touch .env
+          echo "SLACK_SECRET=${{ secrets.SLACK_SECRET }}" > .env
+          echo "SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}" >> .env
+          echo "VERIFICATION_TOKEN=${{ secrets.VERIFICATION_TOKEN }}" >> .env
+          echo "KIBELA_TOKEN=${{ secrets.KIBELA_TOKEN }}" >> .env
+          echo "TEAM_NAME=${{ secrets.TEAM_NAME }}" >> .env
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
