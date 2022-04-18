@@ -29,11 +29,11 @@ jobs:
       - name: Environment Variables
         run: | 
           touch .env
-          echo "SLACK_SECRET=${{ secrets.SLACK_SECRET }}" >> $GITHUB_ENV
-          echo "SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}" >> .env
-          echo "VERIFICATION_TOKEN=${{ secrets.VERIFICATION_TOKEN }}" >> .env
-          echo "KIBELA_TOKEN=${{ secrets.KIBELA_TOKEN }}" >> .env
-          echo "TEAM_NAME=${{ secrets.TEAM_NAME }}" >> .env
+          echo "${{ secrets.SLACK_SECRET }}" >> .env
+          echo "${{ secrets.SLACK_BOT_TOKEN }}" >> .env
+          echo "${{ secrets.VERIFICATION_TOKEN }}" >> .env
+          echo "${{ secrets.KIBELA_TOKEN }}" >> .env
+          echo "${{ secrets.TEAM_NAME }}" >> .env
           less .env
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
