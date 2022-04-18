@@ -28,10 +28,10 @@ exports.slackConnector = functions.https.onRequest((req, res) => {
       error.code = 405;
       throw error;
     }
+    console.log(process.env.SLACK_SECRET);
     // Slackからの認証かどうか
     verifyWebhook(req);
     // 初期認証対応
-    console.log(process.env.SLACK_SECRET);
     const payload = req.body;
     if (payload.type === "url_verification") {
       res.send("slack test");
