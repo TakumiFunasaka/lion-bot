@@ -28,6 +28,7 @@ exports.slackConnector = functions.https.onRequest((req, res) => {
       error.code = 405;
       throw error;
     }
+    console.log("FIREBASE_TOKEN: ", process.env.FIREBASE_TOKEN);
     console.log("SLACK_SECRET: ", process.env.SLACK_SECRET);
     // Slackからの認証かどうか
     verifyWebhook(req);
