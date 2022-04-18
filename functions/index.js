@@ -21,7 +21,7 @@ const verifyWebhook = (req) => {
   verifyRequestSignature(signature);
 };
 
-exports.slackConnector = async (req, res) => {
+exports.slackConnector = functions.https.onRequest((req, res) => {
   try {
     if (req.method !== "POST") {
       const error = new Error("Only POST requests are accepted");
@@ -34,6 +34,7 @@ exports.slackConnector = async (req, res) => {
     const payload = req.body;
     if (payload.type === "url_verification") {
       return res.status(200).json({"challenge": payload.challenge});
+      response.send("slack test");
     }
 
     // kibela APIにメッセージを投げる
@@ -42,10 +43,10 @@ exports.slackConnector = async (req, res) => {
 
     // slackに投稿
 
-    return Promise.resolve();
+    // return Promise.resolve();
   } catch (err) {
     console.error(err);
     res.status(err.code || 500).send(err);
-    return Promise.reject(err);
+    // return Promise.reject(err);
   }
-};
+});
