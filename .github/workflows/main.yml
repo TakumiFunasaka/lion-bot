@@ -28,6 +28,7 @@ jobs:
           echo PROJECT_ID=${{ secrets.PROJECT_ID }} >> $GITHUB_ENV
       - name: Environment Variables
         run: | 
+          cd functions
           touch .env
           echo "SLACK_SECRET=${{ secrets.SLACK_SECRET }}" >> .env
           echo "SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}" >> .env
@@ -40,6 +41,7 @@ jobs:
         # with:
           # args: deploy --only functions
         run: | 
+          cd functions
           npm run deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
