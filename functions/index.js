@@ -11,7 +11,6 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 });
 
 const {verifyRequestSignature} = require("@slack/events-api");
-console.log(process.env.SLACK_SECRET);
 const verifyWebhook = (req) => {
   const signature = {
     signingSecret: process.env.SLACK_SECRET,
@@ -32,6 +31,7 @@ exports.slackConnector = functions.https.onRequest((req, res) => {
     // Slackからの認証かどうか
     verifyWebhook(req);
     // 初期認証対応
+    console.log(process.env.SLACK_SECRET);
     const payload = req.body;
     if (payload.type === "url_verification") {
       res.send("slack test");
