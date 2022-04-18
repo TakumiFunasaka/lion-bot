@@ -33,8 +33,8 @@ exports.slackConnector = functions.https.onRequest((req, res) => {
     // 初期認証対応
     const payload = req.body;
     if (payload.type === "url_verification") {
+      res.send("slack test");
       return res.status(200).json({"challenge": payload.challenge});
-      response.send("slack test");
     }
 
     // kibela APIにメッセージを投げる
