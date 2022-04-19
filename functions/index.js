@@ -75,7 +75,7 @@ const getKibelaInfo = async (path) => {
  * @param {*} title
  */
 const postSlackMessage = async (event, title) => {
-  console.log("postSlackMessage start >>>");
+  console.log("### postSlackMessage start >>>");
   const channel = event.channel;
   const ts = event.ts;
   const url = event.links[0].url;
@@ -113,7 +113,7 @@ const postSlackMessage = async (event, title) => {
         },
       });
   response.json().then( (json)=>{
-    console.log("slackPost::", json);
+    console.log("### slackPost >> ", json);
   });
 };
 
@@ -136,7 +136,7 @@ exports.slackConnector = functions.https.onRequest((req, res) => {
       // kibela APIにメッセージを投げる
       if (payload.event.type === "link_shared") {
         const title = getKibelaInfo(payload.event.links[0].url);
-        console.log(title);
+        console.log("### success:getKibelaInfo >> ", title);
 
         // 画像生成
 
