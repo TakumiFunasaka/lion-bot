@@ -79,6 +79,7 @@ const getKibelaInfo = async (path) => {
     // });
   });
   console.log("getKibelaInfo response >>>>>", response);
+  return response;
 };
 
 /**
@@ -114,9 +115,9 @@ const postSlackMessage = async (event, title) => {
         method: "POST",
         headers: {
           ContentType: "application/json",
+          Authorization: `bearer ${process.env.SLACK_BOT_TOKEN}`,
         },
         data: {
-          token: process.env.SLACK_BOT_TOKEN,
           channel: channel,
           ts: ts,
           unfurls: JSON.parse(message),
@@ -128,7 +129,7 @@ const postSlackMessage = async (event, title) => {
 };
 
 
-exports.slackConnector = functions.https.onRequest((req, res) => {
+exports.slackConnector = functions.https.onRequest(async (req, res) => {
   try {
     if (req.method !== "POST") {
       const error = new Error("Only POST requests are accepted");
@@ -145,7 +146,7 @@ exports.slackConnector = functions.https.onRequest((req, res) => {
     } else {
       // kibela APIにメッセージを投げる
       if (payload.event.type === "link_shared") {
-        const title = getKibelaInfo(payload.event.links[0].url);
+        const title = await getKibelaInfo(payload.event.links[0].url);
         console.log("### success:getKibelaInfo >> ", title);
 
         // 画像生成
