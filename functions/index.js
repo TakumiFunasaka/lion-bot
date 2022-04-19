@@ -78,7 +78,7 @@ const getKibelaInfo = async (path) => {
     //   }
     // });
   });
-  return response;
+  console.log("getKibelaInfo response >>>>>", response);
 };
 
 /**
