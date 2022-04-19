@@ -4,8 +4,6 @@ const fetch = require("node-fetch");
 // exports.generateImage = imageGenerator.generateImage;
 
 // ↓サンプル
-
-
 exports.helloWorld = functions.https.onRequest((request, response) => {
   functions.logger.info("Hello logs!", {structuredData: true});
   response.send("test!");
@@ -45,6 +43,11 @@ exports.kibelaTest = functions.https.onRequest((req, res) => {
       });
 });
 
+
+/**
+ * kibelaURLから記事情報を取得
+ * @param {*} path
+ */
 const getKibelaInfo = async (path) => {
   const graphql = `query getNote{note: noteFromPath(path:"${path}") {title}}`;
   const response = await fetch(`https://${process.env.TEAM_NAME}.kibe.la/api/v1?query=${graphql}`,
@@ -66,6 +69,54 @@ const getKibelaInfo = async (path) => {
   });
 };
 
+/**
+ * slackに投稿する
+ * @param {*} event
+ * @param {*} title
+ */
+const postSlackMessage = async (event, title) => {
+  const channel = event.channel;
+  const ts = event.ts;
+  const url = event.links[0].url;
+  const message = `{
+    "${url}" : {
+      "blocks": [
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "${title}"
+          },
+          "accessory": {
+            "type": "image",
+            "image_url": "https://baseu.jp/wp-content/uploads/image.png",
+            "alt_text": "${title}"
+          }
+        }
+      ]
+    }
+  }`;
+  const response = await fetch("https://slack.com/api/chat.unfurl",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `bearer ${process.env.KIBELA_TOKEN}`,
+          ContentType: "application/json",
+        },
+        data: {
+          token: process.env.SLACK_BOT_TOKEN,
+          channel: channel,
+          ts: ts,
+          unfurls: JSON.parse(message),
+        },
+      });
+  response.json().then( (json)=>{
+    console.log(json);
+  });
+};
+
+
 exports.slackConnector = functions.https.onRequest((req, res) => {
   try {
     if (req.method !== "POST") {
@@ -81,22 +132,19 @@ exports.slackConnector = functions.https.onRequest((req, res) => {
       // 初期認証対応
       return res.status(200).json({"challenge": payload.challenge});
     } else {
+      // kibela APIにメッセージを投げる
       if (payload.event.type === "link_shared") {
         const title = getKibelaInfo(payload.event.links[0].url);
         console.log(title);
+
+        // 画像生成
+
+        // slackに投稿
+        postSlackMessage(payload.event, title);
       }
     }
-
-    // kibela APIにメッセージを投げる
-
-    // 画像生成
-
-    // slackに投稿
-
-    // return Promise.resolve();
   } catch (err) {
     console.error(err);
     res.status(err.code || 500).send(err);
-    // return Promise.reject(err);
   }
 });
