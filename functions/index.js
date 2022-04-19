@@ -50,22 +50,34 @@ exports.kibelaTest = functions.https.onRequest((req, res) => {
  */
 const getKibelaInfo = async (path) => {
   const graphql = `query getNote{note: noteFromPath(path:"${path}") {title}}`;
-  const response = await fetch(`https://${process.env.TEAM_NAME}.kibe.la/api/v1?query=${graphql}`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          Authorization: `bearer ${process.env.KIBELA_TOKEN}`,
-          ContentType: "application/json",
-        },
+  const response = await new Promise(function(resolve, reject) {
+    fetch(`https://${process.env.TEAM_NAME}.kibe.la/api/v1?query=${graphql}`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            Authorization: `bearer ${process.env.KIBELA_TOKEN}`,
+            ContentType: "application/json",
+          },
+        }).then((response)=>{
+      response.json().then((json)=>{
+        if (Object.prototype.hasOwnProperty.call(json.data, "note")) {
+          // console.log("note title::", );
+          resolve(json.data.note.title);
+        }
       });
-  response.json().then((json)=>{
-    if (Object.prototype.hasOwnProperty.call(json.data, "note")) {
-      // console.log("note title::", json.data.note.title);
-      return json.data.note.title;
-    } else {
-      return "";
-    }
+    }).catch((err)=>{
+      reject(err);
+    });
+    return response;
+    // response.json().then((json)=>{
+    //   if (Object.prototype.hasOwnProperty.call(json.data, "note")) {
+    //     // console.log("note title::", json.data.note.title);
+    //     resolve(json.data.note.title);
+    //   } else {
+    //     resolve("");
+    //   }
+    // });
   });
 };
 
