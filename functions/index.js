@@ -101,8 +101,6 @@ const postSlackMessage = async (event, title) => {
       {
         method: "POST",
         headers: {
-          Accept: "application/json",
-          Authorization: `bearer ${process.env.KIBELA_TOKEN}`,
           ContentType: "application/json",
         },
         data: {
