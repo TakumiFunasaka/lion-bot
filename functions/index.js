@@ -82,6 +82,47 @@ const getKibelaInfo = async (path) => {
   return response;
 };
 
+exports.postSlackMessageTest = functions.https.onRequest(async (req, res) => {
+  const channel = "C03BPPZE8LC";
+  const ts = undefined;
+  const url = "https://base.kibe.la/notes/52516";
+  const title = "配送日設定App改善_企画_ロードマップ";
+  const message = `{
+    "${url}" : {
+      "blocks": [
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "${title}"
+          },
+          "accessory": {
+            "type": "image",
+            "image_url": "https://baseu.jp/wp-content/uploads/image.png",
+            "alt_text": "${title}"
+          }
+        }
+      ]
+    }
+  }`;
+  const response = await fetch("https://slack.com/api/chat.unfurl",
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer ${process.env.SLACK_BOT_TOKEN}",
+          ContentType: "application/json",
+        },
+        data: {
+          token: "xoxb-2161213478-3423824918368-4KK58buvvrXGjWc30CHq9LhJ",
+          channel: channel,
+          ts: ts,
+          unfurls: JSON.parse(message),
+        },
+      });
+  response.json().then( (json)=>{
+    console.log("### slackPost >> ", json);
+  });
+});
 /**
  * slackに投稿する
  * @param {*} event
@@ -90,10 +131,12 @@ const getKibelaInfo = async (path) => {
 const postSlackMessage = async (event, title) => {
   console.log("### postSlackMessage start >>>");
   const channel = event.channel;
-  const ts = event.ts;
+  const ts = event.message_ts;
   const url = event.links[0].url;
-  console.log("channel >>>>", channel);
-  console.log("ts >>>>", ts);
+  const unfurlId = event.unfurl_id;
+  console.log("channel ====", channel);
+  console.log("ts ====", ts);
+  console.log("unfurlId ====", unfurlId);
   const message = `{
     "${url}" : {
       "blocks": [
@@ -117,11 +160,12 @@ const postSlackMessage = async (event, title) => {
         method: "POST",
         headers: {
           ContentType: "application/json",
-          Authorization: `bearer ${process.env.SLACK_BOT_TOKEN}`,
+          Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
         },
         data: {
           channel: channel,
           ts: ts,
+          unfurl_id: unfurlId,
           unfurls: JSON.parse(message),
         },
       });
