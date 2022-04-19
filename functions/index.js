@@ -22,47 +22,48 @@ const verifyWebhook = (req) => {
   verifyRequestSignature(signature);
 };
 
-// exports.kibelaTest = functions.https.onRequest((req, res) => {
-//   const path = "https://base.kibe.la/notes/51934";
-//   graphql = `query getNote{note: noteFromPath(path:"${path}") {title}}`;
-//   graphql = `query getNote{note: noteFromPath(path:"${path}") {title}}`;
-//   const options = {
-//     method: "GET",
-//     headers: {
-//       "Accept": "application/json",
-//       "Authorization": `bearer ${process.env.KIBELA_TOKEN}`,
-//     },
-//     payload: {"query": graphql},
-//   };
-//   console.log("options::", options);
-//   fetch(`https://${process.env.TEAM_NAME}.kibe.la/api/v1`, options)
-//       .then((response)=>{
-//         const test = response.json().then((json)=>{
-//           console.log("json'()::", json);
-//         });
-//       // console.log("response ::",response)
-//       // console.log("json ::",json)
-//       // console.log("data ::",json.data)
-//       // const title = json.data.note.title;
-//       // response.send(title);
-//       });
-// });
-
-const getKibelaInfo = async (url) => {
-  const graphql = `query getNote{note: noteFromPath(path:"${url}") {title}}`;
-  const options = {
-    method: "get",
+exports.kibelaTest = functions.https.onRequest((req, res) => {
+  const path = "https://base.kibe.la/notes/51934";
+  const graphql = `query getNote{note: noteFromPath(path:"${path}") {title}}`;
+  fetch(`https://${process.env.TEAM_NAME}.kibe.la/api/v1?query=${graphql}`, {
+    method: "POST",
     headers: {
       Accept: "application/json",
       Authorization: `bearer ${process.env.KIBELA_TOKEN}`,
+      ContentType: "application/json",
     },
-    payload: {"query": graphql},
-  };
-  const res = await fetch(`https://${process.env.TEAM_NAME}.kibe.la/api/v1`, options);
-  const json = await res.json();
-  console.log(json);
-  const title = json.data.note.title;
-  return title;
+    // body: JSON.stringify({query: graphql,variables:{}})
+  })
+      .then((response)=>{
+        response.json().then((json)=>{
+          if (Object.prototype.hasOwnProperty.call(json.data, "note")) {
+            console.log("note title::", json.data.note.title);
+          }
+        });
+      }).catch((err)=>{
+        console.log("err::", err);
+      });
+});
+
+const getKibelaInfo = async (path) => {
+  const graphql = `query getNote{note: noteFromPath(path:"${path}") {title}}`;
+  const response = await fetch(`https://${process.env.TEAM_NAME}.kibe.la/api/v1?query=${graphql}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `bearer ${process.env.KIBELA_TOKEN}`,
+          ContentType: "application/json",
+        },
+      });
+  response.json().then((json)=>{
+    if (Object.prototype.hasOwnProperty.call(json.data, "note")) {
+      console.log("note title::", json.data.note.title);
+      return json.data.note.title;
+    } else {
+      return "";
+    }
+  });
 };
 
 exports.slackConnector = functions.https.onRequest((req, res) => {
