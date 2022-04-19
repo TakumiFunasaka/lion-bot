@@ -92,6 +92,8 @@ const postSlackMessage = async (event, title) => {
   const channel = event.channel;
   const ts = event.ts;
   const url = event.links[0].url;
+  console.log("channel >>>>", channel);
+  console.log("ts >>>>", ts);
   const message = `{
     "${url}" : {
       "blocks": [
