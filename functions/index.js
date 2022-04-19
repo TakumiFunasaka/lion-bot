@@ -69,7 +69,6 @@ const getKibelaInfo = async (path) => {
     }).catch((err)=>{
       reject(err);
     });
-    return response;
     // response.json().then((json)=>{
     //   if (Object.prototype.hasOwnProperty.call(json.data, "note")) {
     //     // console.log("note title::", json.data.note.title);
@@ -79,6 +78,7 @@ const getKibelaInfo = async (path) => {
     //   }
     // });
   });
+  return response;
 };
 
 /**
