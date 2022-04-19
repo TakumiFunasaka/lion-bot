@@ -61,7 +61,7 @@ const getKibelaInfo = async (path) => {
       });
   response.json().then((json)=>{
     if (Object.prototype.hasOwnProperty.call(json.data, "note")) {
-      console.log("note title::", json.data.note.title);
+      // console.log("note title::", json.data.note.title);
       return json.data.note.title;
     } else {
       return "";
@@ -112,7 +112,7 @@ const postSlackMessage = async (event, title) => {
         },
       });
   response.json().then( (json)=>{
-    console.log(json);
+    console.log("slackPost::", json);
   });
 };
 
