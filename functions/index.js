@@ -1,7 +1,7 @@
 const functions = require("firebase-functions");
 const fetch = require("node-fetch");
-// const imageGenerator = require("./imageGenerator");
-// exports.generateImage = imageGenerator.generateImage;
+const imageGenerator = require("./imageGenerator");
+exports.caller = imageGenerator.caller;
 
 // ↓サンプル
 
