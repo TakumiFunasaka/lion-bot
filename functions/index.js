@@ -84,7 +84,8 @@ const getKibelaInfo = async (path) => {
 
 exports.postSlackMessageTest = functions.https.onRequest(async (req, res) => {
   const channel = "C03BPPZE8LC";
-  const ts = undefined;
+  const ts = "1650388964.568409";
+  const unfurlId = "";
   const url = "https://base.kibe.la/notes/52516";
   const title = "配送日設定App改善_企画_ロードマップ";
   const message = `{
@@ -113,9 +114,9 @@ exports.postSlackMessageTest = functions.https.onRequest(async (req, res) => {
           ContentType: "application/json",
         },
         data: {
-          token: "xoxb-2161213478-3423824918368-4KK58buvvrXGjWc30CHq9LhJ",
           channel: channel,
           ts: ts,
+          unfurl_id: unfurlId,
           unfurls: JSON.parse(message),
         },
       });
@@ -123,6 +124,7 @@ exports.postSlackMessageTest = functions.https.onRequest(async (req, res) => {
     console.log("### slackPost >> ", json);
   });
 });
+
 /**
  * slackに投稿する
  * @param {*} event
