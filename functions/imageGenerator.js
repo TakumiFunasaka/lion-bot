@@ -1,10 +1,10 @@
 const fs = require("fs");
 const functions = require("firebase-functions");
-const { createCanvas, Image } = require("canvas");
+const {createCanvas, Image} = require("canvas");
 const base64 = require("urlsafe-base64");
 
 // canvasの横幅
-let canvasWidth = 1200;
+const canvasWidth = 1200;
 // canvasの縦幅
 let canvasHeight = 630;
 let canvas;
@@ -13,8 +13,7 @@ let ctx;
 const dummyData = {
   data: {
     note: {
-      title:
-        "FigJamをちょっと便利に使いたい人に向けたTips紹介",
+      title: "FigJamをちょっと便利に使いたい人に向けたTips紹介",
     },
   },
 };
@@ -33,10 +32,10 @@ const bodyFontStyle = {
 };
 
 // 画像内側余白
-let padding = 50;
+const padding = 50;
 
 // 背景色
-let backgroundColor = "#F0F1F4";
+const backgroundColor = "#F0F1F4";
 
 exports.caller = functions.https.onRequest((req, res) => {
   let img = generate(dummyData.data.note.title, "test.png");
@@ -105,7 +104,9 @@ function generate(title, fileName) {
     ctx.fillText(
       element,
       (canvasWidth - elementWidth) / 2,
-      (canvasHeight - contentHeight) / 2 + titleFontStyle.lineHeight * index + 70
+      (canvasHeight - contentHeight) / 2 +
+        titleFontStyle.lineHeight * index +
+        70
     );
   }
   // kibela部分を描画
@@ -120,11 +121,11 @@ function generate(title, fileName) {
       (canvasWidth - elementWidth) / 2,
       (canvasHeight - contentHeight) / 2 +
         (titleHeight + titleMargin) +
-        bodyFontStyle.lineHeight * index + 55
+        bodyFontStyle.lineHeight * index +
+        55
     );
   }
 
-  
   let b64 = canvas.toDataURL().split(",");
   let img = base64.decode(b64[1]);
 
