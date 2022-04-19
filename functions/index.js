@@ -59,7 +59,7 @@ const getKibelaInfo = async (url) => {
     payload: {"query": graphql},
   };
   const res = await fetch(`https://${process.env.TEAM_NAME}.kibe.la/api/v1`, options);
-  const json = await res.json;
+  const json = await res.json();
   console.log(json);
   const title = json.data.note.title;
   return title;
