@@ -75,6 +75,7 @@ const getKibelaInfo = async (path) => {
  * @param {*} title
  */
 const postSlackMessage = async (event, title) => {
+  console.log("postSlackMessage start >>>");
   const channel = event.channel;
   const ts = event.ts;
   const url = event.links[0].url;
