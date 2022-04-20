@@ -1,6 +1,6 @@
 const fs = require("fs");
 const functions = require("firebase-functions");
-const { createCanvas, Image } = require("canvas");
+const { createCanvas, Image, registerFont } = require("canvas");
 const base64 = require("urlsafe-base64");
 const ImageKit = require("imagekit");
 
@@ -19,15 +19,18 @@ const dummyData = {
   },
 };
 
+registerFont("./NotoSansJP-Bold.otf");
+registerFont("./NotoSansJP-Medium.otf");
+
 // タイトル部分の文字スタイル
 const titleFontStyle = {
-  font: 'extrabold 60px "Noto Sans"',
+  font: 'bold 60px "NotoSansJP"',
   lineHeight: 72,
   color: "#4D4D4D",
 };
 // kibela部分の文字スタイル
 const bodyFontStyle = {
-  font: '40px "Noto Sans"',
+  font: '40px "NotoSansJP"',
   lineHeight: 40,
   color: "#4D4D4D",
 };
