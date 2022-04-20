@@ -170,11 +170,11 @@ const postSlackMessage = async (event, title) => {
   const response = await fetch("https://slack.com/api/chat.unfurl",
       {
         method: "POST",
-        headers: {
-          ContentType: "application/json",
-          Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
-        },
         body: JSON.stringify(paylod),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.SLACK_BOT_TOKEN}`,
+        },
       });
   response.json().then( (json)=>{
     console.log("### slackPost >> ", json);
