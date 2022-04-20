@@ -153,7 +153,7 @@ const postSlackMessage = async (event, title) => {
         accessory: {
           type: "image",
           image_url: "https://baseu.jp/wp-content/uploads/image.png",
-          alt_text: "${title}",
+          alt_text: title,
         },
       },
     ],
@@ -164,7 +164,7 @@ const postSlackMessage = async (event, title) => {
     ts: ts,
     unfurls: unfurls,
   };
-  console.log("data ====", paylod);
+  console.log("post data >>>>>>>>>", paylod);
   const response = await fetch("https://slack.com/api/chat.unfurl",
       {
         method: "POST",
