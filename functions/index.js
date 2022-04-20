@@ -172,7 +172,7 @@ const postSlackMessage = async (event, title) => {
           ContentType: "application/json",
           Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
         },
-        data: JSON.stringify(paylod),
+        body: JSON.stringify(paylod),
       });
   response.json().then( (json)=>{
     console.log("### slackPost >> ", json);
