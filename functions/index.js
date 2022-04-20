@@ -141,24 +141,24 @@ const postSlackMessage = async (event, title) => {
   console.log("ts ====", ts);
   console.log("unfurlId ====", unfurlId);
   console.log("source ====", source);
-  const message = `{
-    "${url}" : {
-      "blocks": [
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": "${title}"
-          },
-          "accessory": {
-            "type": "image",
-            "image_url": "https://baseu.jp/wp-content/uploads/image.png",
-            "alt_text": "${title}"
-          }
-        }
-      ]
-    }
-  }`;
+  const unfurls = {};
+  const unfurlData = {
+    blocks: [
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: title,
+        },
+        accessory: {
+          type: "image",
+          image_url: "https://baseu.jp/wp-content/uploads/image.png",
+          alt_text: "${title}",
+        },
+      },
+    ],
+  };
+  unfurls[url] = unfurlData;
   const response = await fetch("https://slack.com/api/chat.unfurl",
       {
         method: "POST",
@@ -171,7 +171,7 @@ const postSlackMessage = async (event, title) => {
           ts: ts,
           unfurl_id: unfurlId,
           source: source,
-          unfurls: JSON.parse(message),
+          unfurls: JSON.stringify(unfurls),
         },
       });
   response.json().then( (json)=>{
