@@ -150,11 +150,15 @@ const postSlackMessage = async (event, title) => {
           type: "mrkdwn",
           text: title,
         },
-        accessory: {
-          type: "image",
-          image_url: "https://baseu.jp/wp-content/uploads/image.png",
-          alt_text: title,
+      },
+      {
+        type: "image",
+        title: {
+          type: "plain_text",
+          text: title,
         },
+        image_url: "https://baseu.jp/wp-content/uploads/image.png",
+        alt_text: title,
       },
     ],
   };
