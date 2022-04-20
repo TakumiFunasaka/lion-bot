@@ -40,8 +40,8 @@ const backgroundColor = "#F0F1F4";
 
 exports.generate = (title) => {
 
-registerFont(__dirname + "/NotoSansJP-Bold.otf");
-registerFont(__dirname + "/NotoSansJP-Medium.otf");
+registerFont(__dirname + "/NotoSansJP-Bold.otf", { family: "NotoSansJP", weight: "bold"});
+registerFont(__dirname + "/NotoSansJP-Medium.otf", { family: "NotoSansJP"});
 
   // 空白のcanvasを作成
   canvas = createCanvas(canvasWidth, canvasHeight);
