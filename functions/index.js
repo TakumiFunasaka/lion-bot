@@ -162,6 +162,8 @@ const postSlackMessage = async (event, title) => {
   const paylod = {
     channel: channel,
     ts: ts,
+    unfurl_id: unfurlId,
+    source: source,
     unfurls: unfurls,
   };
   console.log("post data >>>>>>>>>", paylod);
@@ -196,7 +198,8 @@ exports.slackConnector = functions.https.onRequest(async (req, res) => {
       return res.status(200).json({"challenge": payload.challenge});
     } else {
       // kibela APIにメッセージを投げる
-      if (payload.event.type === "link_shared") {
+      if (payload.event.type === "link_shared" &&
+        payload.event.channel === "C03BPPZE8LC") {
         const title = await getKibelaInfo(payload.event.links[0].url);
         console.log("### success:getKibelaInfo >> ", title);
 
