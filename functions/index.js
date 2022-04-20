@@ -136,9 +136,11 @@ const postSlackMessage = async (event, title) => {
   const ts = event.message_ts;
   const url = event.links[0].url;
   const unfurlId = event.unfurl_id;
+  const source = event.source;
   console.log("channel ====", channel);
   console.log("ts ====", ts);
   console.log("unfurlId ====", unfurlId);
+  console.log("source ====", source);
   const message = `{
     "${url}" : {
       "blocks": [
@@ -168,6 +170,7 @@ const postSlackMessage = async (event, title) => {
           channel: channel,
           ts: ts,
           unfurl_id: unfurlId,
+          source: source,
           unfurls: JSON.parse(message),
         },
       });
