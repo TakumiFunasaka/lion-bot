@@ -19,9 +19,6 @@ const dummyData = {
   },
 };
 
-registerFont(__dirname + "/NotoSansJP-Bold.otf");
-registerFont(__dirname + "/NotoSansJP-Medium.otf");
-
 // タイトル部分の文字スタイル
 const titleFontStyle = {
   font: 'bold 60px "NotoSansJP"',
@@ -42,6 +39,10 @@ const padding = 50;
 const backgroundColor = "#F0F1F4";
 
 exports.generate = (title) => {
+
+registerFont(__dirname + "/NotoSansJP-Bold.otf");
+registerFont(__dirname + "/NotoSansJP-Medium.otf");
+
   // 空白のcanvasを作成
   canvas = createCanvas(canvasWidth, canvasHeight);
   // コンテキスト取得
