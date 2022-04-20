@@ -160,12 +160,12 @@ const postSlackMessage = async (event, title) => {
   };
   unfurls[url] = unfurlData;
   const paylod = {
-    channel: channel,
-    ts: ts,
     unfurl_id: unfurlId,
     source: source,
     unfurls: unfurls,
   };
+  // channel: channel,
+  // ts: ts,
   console.log("post data >>>>>>>>>", paylod);
   const response = await fetch("https://slack.com/api/chat.unfurl",
       {
