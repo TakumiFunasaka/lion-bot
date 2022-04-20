@@ -19,8 +19,8 @@ const dummyData = {
   },
 };
 
-registerFont("./NotoSansJP-Bold.otf");
-registerFont("./NotoSansJP-Medium.otf");
+registerFont(__dirname + "/NotoSansJP-Bold.otf");
+registerFont(__dirname + "/NotoSansJP-Medium.otf");
 
 // タイトル部分の文字スタイル
 const titleFontStyle = {
