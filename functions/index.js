@@ -1,15 +1,15 @@
 const functions = require("firebase-functions");
 const fetch = require("node-fetch");
 const imageGenerator = require("./imageGenerator");
-exports.caller = imageGenerator.caller;
+const ImageKit = require("imagekit");
 
 // ↓サンプル
 exports.helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info("Hello logs!", {structuredData: true});
+  functions.logger.info("Hello logs!", { structuredData: true });
   response.send("test!");
 });
 
-const {verifyRequestSignature} = require("@slack/events-api");
+const { verifyRequestSignature } = require("@slack/events-api");
 const verifyWebhook = (req) => {
   const signature = {
     signingSecret: process.env.SLACK_SECRET,
@@ -32,17 +32,17 @@ exports.kibelaTest = functions.https.onRequest((req, res) => {
     },
     // body: JSON.stringify({query: graphql,variables:{}})
   })
-      .then((response)=>{
-        response.json().then((json)=>{
-          if (Object.prototype.hasOwnProperty.call(json.data, "note")) {
-            console.log("note title::", json.data.note.title);
-          }
-        });
-      }).catch((err)=>{
-        console.log("err::", err);
+    .then((response) => {
+      response.json().then((json) => {
+        if (Object.prototype.hasOwnProperty.call(json.data, "note")) {
+          console.log("note title::", json.data.note.title);
+        }
       });
+    })
+    .catch((err) => {
+      console.log("err::", err);
+    });
 });
-
 
 /**
  * kibelaURLから記事情報を取得
@@ -50,25 +50,26 @@ exports.kibelaTest = functions.https.onRequest((req, res) => {
  */
 const getKibelaInfo = async (path) => {
   const graphql = `query getNote{note: noteFromPath(path:"${path}") {title}}`;
-  const response = await new Promise(function(resolve, reject) {
-    fetch(`https://${process.env.TEAM_NAME}.kibe.la/api/v1?query=${graphql}`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            Authorization: `bearer ${process.env.KIBELA_TOKEN}`,
-            ContentType: "application/json",
-          },
-        }).then((response)=>{
-      response.json().then((json)=>{
-        if (Object.prototype.hasOwnProperty.call(json.data, "note")) {
-          // console.log("note title::", );
-          resolve(json.data.note.title);
-        }
+  const response = await new Promise(function (resolve, reject) {
+    fetch(`https://${process.env.TEAM_NAME}.kibe.la/api/v1?query=${graphql}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        Authorization: `bearer ${process.env.KIBELA_TOKEN}`,
+        ContentType: "application/json",
+      },
+    })
+      .then((response) => {
+        response.json().then((json) => {
+          if (Object.prototype.hasOwnProperty.call(json.data, "note")) {
+            // console.log("note title::", );
+            resolve(json.data.note.title);
+          }
+        });
+      })
+      .catch((err) => {
+        reject(err);
       });
-    }).catch((err)=>{
-      reject(err);
-    });
     // response.json().then((json)=>{
     //   if (Object.prototype.hasOwnProperty.call(json.data, "note")) {
     //     // console.log("note title::", json.data.note.title);
@@ -106,21 +107,20 @@ exports.postSlackMessageTest = functions.https.onRequest(async (req, res) => {
       ]
     }
   }`;
-  const response = await fetch("https://slack.com/api/chat.unfurl",
-      {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer ${process.env.SLACK_BOT_TOKEN}",
-          ContentType: "application/json",
-        },
-        data: {
-          channel: channel,
-          ts: ts,
-          unfurl_id: unfurlId,
-          unfurls: JSON.parse(message),
-        },
-      });
-  response.json().then( (json)=>{
+  const response = await fetch("https://slack.com/api/chat.unfurl", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer ${process.env.SLACK_BOT_TOKEN}",
+      ContentType: "application/json",
+    },
+    data: {
+      channel: channel,
+      ts: ts,
+      unfurl_id: unfurlId,
+      unfurls: JSON.parse(message),
+    },
+  });
+  response.json().then((json) => {
     console.log("### slackPost >> ", json);
   });
 });
@@ -171,20 +171,18 @@ const postSlackMessage = async (event, title, image) => {
   // channel: channel,
   // ts: ts,
   console.log("post data >>>>>>>>>", paylod);
-  const response = await fetch("https://slack.com/api/chat.unfurl",
-      {
-        method: "POST",
-        body: JSON.stringify(paylod),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.SLACK_BOT_TOKEN}`,
-        },
-      });
-  response.json().then( (json)=>{
+  const response = await fetch("https://slack.com/api/chat.unfurl", {
+    method: "POST",
+    body: JSON.stringify(paylod),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
+    },
+  });
+  response.json().then((json) => {
     console.log("### slackPost >> ", json);
   });
 };
-
 
 exports.slackConnector = functions.https.onRequest(async (req, res) => {
   try {
@@ -199,21 +197,46 @@ exports.slackConnector = functions.https.onRequest(async (req, res) => {
     const payload = req.body;
     if (payload.type === "url_verification") {
       // 初期認証対応
-      return res.status(200).json({"challenge": payload.challenge});
+      return res.status(200).json({ challenge: payload.challenge });
     } else {
       // kibela APIにメッセージを投げる
-      if (payload.event.type === "link_shared" &&
-        payload.event.channel === "C03BPPZE8LC") {
+      if (
+        payload.event.type === "link_shared" &&
+        payload.event.channel === "C03BPPZE8LC"
+      ) {
         const title = await getKibelaInfo(payload.event.links[0].url);
         console.log("### success:getKibelaInfo >> ", title);
 
         // 画像生成
-        // const image =
-        const image = "https://baseu.jp/wp-content/uploads/image.png";
+        ////// =====================================================================================
+        let imageUrl = "";
 
-        // slackに投稿
-        postSlackMessage(payload.event, title, image);
+        const img64 = imageGenerator.generate(title);
+
+        //環境変数を読み込む
+        const imagekit = new ImageKit({
+          publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+          privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+          urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
+        });
+
+        // 画像アップロード
+        imagekit
+          .upload({
+            file: img64,
+            fileName: "kibela_OGP.jpg",
+          })
+          .then((imagekitRes) => {
+            imageUrl = imagekitRes.url;
+
+            // slackに投稿
+            postSlackMessage(payload.event, title, image);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       }
+      ////// =====================================================================================
     }
   } catch (err) {
     console.error(err);
