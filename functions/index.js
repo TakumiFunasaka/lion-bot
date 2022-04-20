@@ -230,7 +230,7 @@ exports.slackConnector = functions.https.onRequest(async (req, res) => {
             imageUrl = imagekitRes.url;
 
             // slackに投稿
-            postSlackMessage(payload.event, title, image);
+            postSlackMessage(payload.event, title, imageUrl);
           })
           .catch((err) => {
             console.error(err);
