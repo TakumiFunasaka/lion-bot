@@ -159,6 +159,12 @@ const postSlackMessage = async (event, title) => {
     ],
   };
   unfurls[url] = unfurlData;
+  const paylod = {
+    channel: channel,
+    ts: ts,
+    unfurls: unfurls,
+  };
+  console.log("data ====", paylod);
   const response = await fetch("https://slack.com/api/chat.unfurl",
       {
         method: "POST",
@@ -166,13 +172,7 @@ const postSlackMessage = async (event, title) => {
           ContentType: "application/json",
           Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
         },
-        data: {
-          channel: channel,
-          ts: ts,
-          unfurl_id: unfurlId,
-          source: source,
-          unfurls: JSON.stringify(unfurls),
-        },
+        data: JSON.stringify(paylod),
       });
   response.json().then( (json)=>{
     console.log("### slackPost >> ", json);
