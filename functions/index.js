@@ -228,6 +228,7 @@ exports.slackConnector = functions.https.onRequest(async (req, res) => {
           })
           .then((imagekitRes) => {
             imageUrl = imagekitRes.url;
+            imageUrl = "https://static.thebase.in/img/top/price/plan_5.png"
 
             // slackに投稿
             postSlackMessage(payload.event, title, imageUrl);
