@@ -130,7 +130,7 @@ exports.postSlackMessageTest = functions.https.onRequest(async (req, res) => {
  * @param {*} event
  * @param {*} title
  */
-const postSlackMessage = async (event, title) => {
+const postSlackMessage = async (event, title, image) => {
   console.log("### postSlackMessage start >>>");
   const channel = event.channel;
   const ts = event.message_ts;
@@ -157,7 +157,7 @@ const postSlackMessage = async (event, title) => {
           type: "plain_text",
           text: title,
         },
-        image_url: "https://baseu.jp/wp-content/uploads/image.png",
+        image_url: image,
         alt_text: title,
       },
     ],
@@ -208,9 +208,11 @@ exports.slackConnector = functions.https.onRequest(async (req, res) => {
         console.log("### success:getKibelaInfo >> ", title);
 
         // 画像生成
+        // const image =
+        const image = "https://baseu.jp/wp-content/uploads/image.png";
 
         // slackに投稿
-        postSlackMessage(payload.event, title);
+        postSlackMessage(payload.event, title, image);
       }
     }
   } catch (err) {
