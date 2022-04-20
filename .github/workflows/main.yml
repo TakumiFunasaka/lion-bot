@@ -35,6 +35,9 @@ jobs:
           echo "VERIFICATION_TOKEN=${{ secrets.VERIFICATION_TOKEN }}" >> .env
           echo "KIBELA_TOKEN=${{ secrets.KIBELA_TOKEN }}" >> .env
           echo "TEAM_NAME=${{ secrets.TEAM_NAME }}" >> .env
+          echo "IMAGEKIT_PUBLIC_KEY=${{ secrets.IMAGEKIT_PUBLIC_KEY }}" >> .env
+          echo "IMAGEKIT_PRIVATE_KEY=${{ secrets.IMAGEKIT_PRIVATE_KEY }}" >> .env
+
           less .env
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
@@ -46,8 +49,3 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_ID: ${{env.PROJECT_ID}}
-          # SLACK_SECRET: ${{ secrets.SLACK_SECRET }}
-          # SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          # VERIFICATION_TOKEN: ${{ secrets.VERIFICATION_TOKEN }}
-          # KIBELA_TOKEN: ${{ secrets.KIBELA_TOKEN }}
-          # TEAM_NAME: ${{ secrets.TEAM_NAME }}
