@@ -131,16 +131,11 @@ exports.postSlackMessageTest = functions.https.onRequest(async (req, res) => {
  * @param {*} title
  */
 const postSlackMessage = async (event, title, image) => {
-  console.log("### postSlackMessage start >>>");
   const channel = event.channel;
   const ts = event.message_ts;
   const url = event.links[0].url;
   const unfurlId = event.unfurl_id;
   const source = event.source;
-  console.log("channel ====", channel);
-  console.log("ts ====", ts);
-  console.log("unfurlId ====", unfurlId);
-  console.log("source ====", source);
   const unfurls = {};
   const unfurlData = {
     blocks: [
@@ -168,9 +163,6 @@ const postSlackMessage = async (event, title, image) => {
     source: source,
     unfurls: unfurls,
   };
-  // channel: channel,
-  // ts: ts,
-  console.log("post data >>>>>>>>>", paylod);
   const response = await fetch("https://slack.com/api/chat.unfurl", {
     method: "POST",
     body: JSON.stringify(paylod),
@@ -205,7 +197,6 @@ exports.slackConnector = functions.https.onRequest(async (req, res) => {
         payload.event.channel === "C03BPPZE8LC"
       ) {
         const title = await getKibelaInfo(payload.event.links[0].url);
-        console.log("### success:getKibelaInfo >> ", title);
 
         // 画像生成
         ////// =====================================================================================
